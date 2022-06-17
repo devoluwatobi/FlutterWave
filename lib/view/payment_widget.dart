@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwave_standard/core/TransactionCallBack.dart';
+import 'package:flutterwave_standard/core/navigation_controller.dart';
 import 'package:flutterwave_standard/models/requests/standard_request.dart';
 import 'package:flutterwave_standard/models/responses/charge_response.dart';
-import 'package:flutterwave_standard/core/navigation_controller.dart';
 import 'package:flutterwave_standard/view/view_utils.dart';
 import 'package:http/http.dart';
 
@@ -49,21 +49,39 @@ class _PaymentState extends State<PaymentWidget>
           widget.style.getAppBarColor(),
         ),
         body: SafeArea(
-          child: Container(
-            width: double.infinity,
-            height: 50,
-            margin: EdgeInsets.fromLTRB(20, 50, 20, 0),
-            child: ElevatedButton(
-              autofocus: true,
-              onPressed: _handleButtonClicked,
-              style: ElevatedButton.styleFrom(
-                  primary: widget.style.getButtonColor(),
-                  textStyle: widget.style.getButtonTextStyle()),
-              child: Text(
-                widget.style.getButtonText(),
-                style: widget.style.getButtonTextStyle(),
-              ),
-            ),
+          child: Center(
+            child: Container(
+                width: double.infinity,
+                margin: EdgeInsets.fromLTRB(20, 50, 20, 0),
+                child:
+                    // ElevatedButton(
+                    //   autofocus: true,
+                    //   onPressed: _handleButtonClicked,
+                    //   style: ElevatedButton.styleFrom(
+                    //       primary: widget.style.getButtonColor(),
+                    //       textStyle: widget.style.getButtonTextStyle()),
+                    //   child: Text(
+                    //     widget.style.getButtonText(),
+                    //     style: widget.style.getButtonTextStyle(),
+                    //   ),
+                    // ),
+
+                    GestureDetector(
+                  onTap: _handleButtonClicked,
+                  child: Container(
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: widget.style.getButtonColor(),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 17, vertical: 17),
+                    child: Text(
+                      widget.style.getButtonText(),
+                      style: widget.style.getButtonTextStyle(),
+                    ),
+                  ),
+                )),
           ),
         ),
       ),

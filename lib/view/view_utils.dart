@@ -1,8 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class FlutterwaveViewUtils {
-
   /// Displays a modal to confirm payment
   static Future<void> showConfirmPaymentModal(
     final BuildContext context,
@@ -14,47 +14,87 @@ class FlutterwaveViewUtils {
     final TextStyle modalContinueTextStyle,
     final Function onContinuePressed,
   ) async {
+    // return showDialog(
+    //   context: context,
+    //   barrierDismissible: false,
+    //   builder: (BuildContext buildContext) {
+    //     final transactionCurrency = currency ?? "NGN";
+    //     return AlertDialog(
+    //       backgroundColor: dialogBackgroundColor,
+    //       content: Container(
+    //         margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+    //         child: Text(
+    //           "You will be charged a total of $transactionCurrency "
+    //           "$amount. Do you wish to continue? ",
+    //           textAlign: TextAlign.center,
+    //           style: textStyle,
+    //           // style: TextStyle(
+    //           //   color: Colors.black,
+    //           //   fontSize: 18,
+    //           //   letterSpacing: 1.2,
+    //           // ),
+    //         ),
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           onPressed: () => {Navigator.of(context).pop()},
+    //           child: Text(
+    //             "CANCEL",
+    //             style: modalCancelTextStyle,
+    //           ),
+    //         ),
+    //         TextButton(
+    //           onPressed: () => onContinuePressed(),
+    //           child: Text(
+    //             "CONTINUE",
+    //             style: modalContinueTextStyle,
+    //           ),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
 
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext buildContext) {
-        final transactionCurrency = currency ?? "NGN";
-        return AlertDialog(
-          backgroundColor: dialogBackgroundColor,
-          content: Container(
-            margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
-            child: Text(
-              "You will be charged a total of $transactionCurrency "
-              "$amount. Do you wish to continue? ",
-              textAlign: TextAlign.center,
-              style: textStyle,
-              // style: TextStyle(
-              //   color: Colors.black,
-              //   fontSize: 18,
-              //   letterSpacing: 1.2,
-              // ),
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => {Navigator.of(context).pop()},
+    return showCupertinoModalPopup(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          final transactionCurrency = currency ?? "NGN";
+          return CupertinoAlertDialog(
+            content: Container(
+              margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
               child: Text(
-                "CANCEL",
-                style: modalCancelTextStyle,
+                "You will be charged a total of $transactionCurrency "
+                "$amount. Do you wish to continue? ",
+                textAlign: TextAlign.center,
+                style: textStyle,
+                // style: TextStyle(
+                //   color: Colors.black,
+                //   fontSize: 18,
+                //   letterSpacing: 1.2,
+                // ),
               ),
             ),
-            TextButton(
-              onPressed: () => onContinuePressed(),
-              child: Text(
-                "CONTINUE",
-                style: modalContinueTextStyle,
+            actions: [
+              CupertinoActionSheetAction(
+                onPressed: () => {Navigator.of(context).pop()},
+                isDestructiveAction: true,
+                child: Text(
+                  "CANCEL",
+                  style: modalCancelTextStyle,
+                ),
               ),
-            ),
-          ],
-        );
-      },
-    );
+              CupertinoActionSheetAction(
+                onPressed: () => onContinuePressed(),
+                isDestructiveAction: true,
+                child: Text(
+                  "CONTINUE",
+                  style: modalContinueTextStyle,
+                ),
+              ),
+            ],
+          );
+        });
   }
 
   /// Shows progress dialog
@@ -72,26 +112,45 @@ class FlutterwaveViewUtils {
     final style =
         textStyle != null ? textStyle : TextStyle(color: Colors.black);
 
-    return showDialog(
-      context: context,
-      barrierDismissible: dismissible,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: dialogBackgroundColor,
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              indicator,
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: style,
-              )
-            ],
-          ),
-        );
-      },
-    );
+    // return showDialog(
+    //   context: context,
+    //   barrierDismissible: dismissible,
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       backgroundColor: dialogBackgroundColor,
+    //       content: Row(
+    //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    //         children: [
+    //           indicator,
+    //           Text(
+    //             message,
+    //             textAlign: TextAlign.center,
+    //             style: style,
+    //           )
+    //         ],
+    //       ),
+    //     );
+    //   },
+    // );
+
+    return showCupertinoModalPopup(
+        context: context,
+        barrierDismissible: dismissible,
+        builder: (BuildContext context) {
+          return CupertinoAlertDialog(
+            content: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                indicator,
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: style,
+                )
+              ],
+            ),
+          );
+        });
   }
 
   static void _goBackToPaymentScreen(final BuildContext context) {
@@ -106,10 +165,10 @@ class FlutterwaveViewUtils {
       final Icon appBarIcon,
       final Color appBarColor,
       [final Function? handleBackPress]) {
-
     return AppBar(
       backgroundColor: appBarColor,
       titleTextStyle: appBarTitleTextStyle,
+      elevation: 0,
       leading: IconButton(
         icon: appBarIcon,
         onPressed: () => handleBackPress == null
@@ -126,14 +185,13 @@ class FlutterwaveViewUtils {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-
   /// Displays a toast notification
   static void showToast(BuildContext context, String text) {
     Fluttertoast.showToast(
-        msg: text,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Color(0xAA383737),
-        textColor: Colors.white,
+      msg: text,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Color(0xAA383737),
+      textColor: Colors.white,
     );
   }
 }
