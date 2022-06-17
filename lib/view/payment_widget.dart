@@ -66,22 +66,27 @@ class _PaymentState extends State<PaymentWidget>
                     //   ),
                     // ),
 
+                    Column(
+                  children: [
                     GestureDetector(
-                  onTap: _handleButtonClicked,
-                  child: Container(
-                    height: 60,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: widget.style.getButtonColor(),
-                      borderRadius: BorderRadius.circular(5),
+                      onTap: _handleButtonClicked,
+                      child: Container(
+                        height: 60,
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: widget.style.getButtonColor(),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 17, vertical: 17),
+                        child: Text(
+                          widget.style.getButtonText(),
+                          style: widget.style.getButtonTextStyle(),
+                        ),
+                      ),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 17, vertical: 17),
-                    child: Text(
-                      widget.style.getButtonText(),
-                      style: widget.style.getButtonTextStyle(),
-                    ),
-                  ),
+                  ],
                 )),
           ),
         ),
