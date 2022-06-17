@@ -137,12 +137,21 @@ class _PaymentState extends State<PaymentWidget>
   @override
   onTransactionError() {
     _showErrorAndClose("transaction error");
+    final ChargeResponse chargeResponse = ChargeResponse(
+      status: "error",
+      success: false,
+    );
+    Navigator.pop(context, chargeResponse);
   }
 
   @override
   onCancelled() {
     FlutterwaveViewUtils.showToast(context, "Transaction Cancelled");
-    Navigator.pop(context);
+    final ChargeResponse chargeResponse = ChargeResponse(
+      status: "canceled",
+      success: false,
+    );
+    Navigator.pop(context, chargeResponse);
   }
 
   @override
