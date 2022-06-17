@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../models/responses/charge_response.dart';
+
 class FlutterwaveViewUtils {
   /// Displays a modal to confirm payment
   static Future<void> showConfirmPaymentModal(
@@ -154,7 +156,11 @@ class FlutterwaveViewUtils {
   }
 
   static void _goBackToPaymentScreen(final BuildContext context) {
-    Navigator.of(context).pop();
+    final ChargeResponse chargeResponse = ChargeResponse(
+      status: "canceled",
+      success: false,
+    );
+    Navigator.pop(context, chargeResponse);
   }
 
   /// Cretaes a customised Appbar
