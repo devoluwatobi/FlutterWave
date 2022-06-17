@@ -69,6 +69,7 @@ class _PaymentState extends State<PaymentWidget>
                     GestureDetector(
                   onTap: _handleButtonClicked,
                   child: Container(
+                    height: 60,
                     width: double.infinity,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
