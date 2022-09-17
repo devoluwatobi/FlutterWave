@@ -23,8 +23,7 @@ class NavigationController {
       if (standardResponse.status == "error") {
         throw (TransactionError(standardResponse.message!));
       }
-      // openBrowser(
-      //     standardResponse.data?.link ?? "", request.redirectUrl);
+      openBrowser(standardResponse.data?.link ?? "", request.redirectUrl);
     } catch (error) {
       print("error is $error");
       throw (error);
