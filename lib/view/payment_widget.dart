@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutterwave_standard/core/TransactionCallBack.dart';
-import 'package:flutterwave_standard/core/navigation_controller.dart';
 import 'package:flutterwave_standard/models/requests/standard_request.dart';
 import 'package:flutterwave_standard/models/responses/charge_response.dart';
+import 'package:flutterwave_standard/core/navigation_controller.dart';
 import 'package:flutterwave_standard/view/view_utils.dart';
 import 'package:http/http.dart';
 
@@ -11,11 +11,12 @@ import 'flutterwave_style.dart';
 class PaymentWidget extends StatefulWidget {
   final FlutterwaveStyle style;
   final StandardRequest request;
+  final BuildContext mainContext;
 
   BuildContext? loadingDialogContext;
   SnackBar? snackBar;
 
-  PaymentWidget({required this.request, required this.style});
+  PaymentWidget({required this.request, required this.style, required this.mainContext});
 
   @override
   State<StatefulWidget> createState() => _PaymentState();
@@ -49,45 +50,21 @@ class _PaymentState extends State<PaymentWidget>
           widget.style.getAppBarColor(),
         ),
         body: SafeArea(
-          child: Center(
-            child: Container(
-                width: double.infinity,
-                margin: EdgeInsets.fromLTRB(20, 50, 20, 0),
-                child:
-                    // ElevatedButton(
-                    //   autofocus: true,
-                    //   onPressed: _handleButtonClicked,
-                    //   style: ElevatedButton.styleFrom(
-                    //       primary: widget.style.getButtonColor(),
-                    //       textStyle: widget.style.getButtonTextStyle()),
-                    //   child: Text(
-                    //     widget.style.getButtonText(),
-                    //     style: widget.style.getButtonTextStyle(),
-                    //   ),
-                    // ),
-
-                    Column(
-                  children: [
-                    GestureDetector(
-                      onTap: _handleButtonClicked,
-                      child: Container(
-                        height: 60,
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: widget.style.getButtonColor(),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 17, vertical: 17),
-                        child: Text(
-                          widget.style.getButtonText(),
-                          style: widget.style.getButtonTextStyle(),
-                        ),
-                      ),
-                    ),
-                  ],
-                )),
+          child: Container(
+            width: double.infinity,
+            height: 50,
+            margin: EdgeInsets.fromLTRB(20, 50, 20, 0),
+            child: ElevatedButton(
+              autofocus: true,
+              onPressed: _handleButtonClicked,
+              style: ElevatedButton.styleFrom(
+                  primary: widget.style.getButtonColor(),
+                  textStyle: widget.style.getButtonTextStyle()),
+              child: Text(
+                widget.style.getButtonText(),
+                style: widget.style.getButtonTextStyle(),
+              ),
+            ),
           ),
         ),
       ),
@@ -101,7 +78,7 @@ class _PaymentState extends State<PaymentWidget>
 
   void _handlePayment() async {
     try {
-      Navigator.of(context).pop(); // to remove confirmation dialog
+      Navigator.of(widget.mainContext).pop(); // to remove confirmation dialog
       _toggleButtonActive(false);
       controller.startTransaction(widget.request);
       _toggleButtonActive(true);
@@ -118,13 +95,13 @@ class _PaymentState extends State<PaymentWidget>
   }
 
   void _showErrorAndClose(final String errorMessage) {
-    FlutterwaveViewUtils.showToast(context, errorMessage);
-    Navigator.pop(context); // return response to user
+    FlutterwaveViewUtils.showToast(widget.mainContext, errorMessage);
+    Navigator.pop(widget.mainContext); // return response to user
   }
 
   void _showConfirmDialog() {
     FlutterwaveViewUtils.showConfirmPaymentModal(
-        context,
+        widget.mainContext,
         widget.request.currency,
         widget.request.amount,
         widget.style.getMainTextStyle(),
@@ -137,27 +114,18 @@ class _PaymentState extends State<PaymentWidget>
   @override
   onTransactionError() {
     _showErrorAndClose("transaction error");
-    final ChargeResponse chargeResponse = ChargeResponse(
-      status: "error",
-      success: false,
-    );
-    Navigator.pop(context, chargeResponse);
   }
 
   @override
   onCancelled() {
-    FlutterwaveViewUtils.showToast(context, "Transaction Cancelled");
-    final ChargeResponse chargeResponse = ChargeResponse(
-      status: "canceled",
-      success: false,
-    );
-    Navigator.pop(context, chargeResponse);
+    FlutterwaveViewUtils.showToast(widget.mainContext, "Transaction Cancelled");
+    Navigator.pop(widget.mainContext);
   }
 
   @override
   onTransactionSuccess(String id, String txRef) {
     final ChargeResponse chargeResponse = ChargeResponse(
         status: "success", success: true, transactionId: id, txRef: txRef);
-    Navigator.pop(this.context, chargeResponse);
+    Navigator.pop(this.widget.mainContext, chargeResponse);
   }
 }
